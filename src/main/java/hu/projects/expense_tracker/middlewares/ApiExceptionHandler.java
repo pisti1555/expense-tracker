@@ -1,50 +1,34 @@
 package hu.projects.expense_tracker.middlewares;
 
-import hu.projects.expense_tracker.common.exceptions.ApiException;
 import hu.projects.expense_tracker.common.exceptions.NotFoundException;
-import hu.projects.expense_tracker.services.error_message_provider.EnvironmentBasedErrorMessageProvider;
+import hu.projects.expense_tracker.common.exceptions.UnexpectedException;
+import hu.projects.expense_tracker.common.models.error_responses.ErrorResponse;
+import hu.projects.expense_tracker.services.error_message_provider.EnvironmentBasedErrorResponseProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.time.LocalDateTime;
-
 @RestControllerAdvice
 public class ApiExceptionHandler {
-    private final EnvironmentBasedErrorMessageProvider errorMessageProvider;
+    private final EnvironmentBasedErrorResponseProvider errorResponseProvider;
 
     @Autowired
-    public ApiExceptionHandler(EnvironmentBasedErrorMessageProvider errorMessageProvider) {
-        this.errorMessageProvider = errorMessageProvider;
-    }
-
-    private record ApiErrorResponse(
-            String title,
-            String message,
-            int status,
-            String timestamp
-    ) {}
-
-    private static ApiErrorResponse createErrorResponse(ApiException ex) {
-        return new ApiErrorResponse(ex.getTitle(), ex.getMessage(), ex.getStatus(), ex.getTimestamp());
+    public ApiExceptionHandler(EnvironmentBasedErrorResponseProvider errorResponseProvider) {
+        this.errorResponseProvider = errorResponseProvider;
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ApiErrorResponse handleNotFound(NotFoundException ex) {
-        return createErrorResponse(ex);
+    public ErrorResponse handleNotFound(NotFoundException ex) {
+        return errorResponseProvider.convertException(ex, ex.getMessage());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ApiErrorResponse handleInternalServerError(Throwable ex) {
-        return new ApiErrorResponse(
-                "Internal Server Error",
-                errorMessageProvider.getErrorMessage(ex.getMessage(), "An unexpected error occurred."),
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                LocalDateTime.now().toString()
-        );
+    public ErrorResponse handleInternalServerError(Throwable ex) {
+        var unexpectedException = new UnexpectedException(ex.getMessage());
+        return errorResponseProvider.convertException(unexpectedException, "An error occurred on the server side :(");
     }
 }
