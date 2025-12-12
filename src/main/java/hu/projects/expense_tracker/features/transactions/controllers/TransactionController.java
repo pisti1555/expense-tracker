@@ -52,7 +52,7 @@ public class TransactionController {
     public ResponseEntity<Page<TransactionDto>> getTransactions(
             @RequestParam Long userId,
             @RequestParam(required = false, defaultValue = "10") int size,
-            @RequestParam(required = false, defaultValue = "1") int page
+            @RequestParam(required = false, defaultValue = "0") int page
     ) {
         var pgAttributes = new PaginationAttributes(size, page);
         var result = transactionService.getTransactionsPaged(userId, pgAttributes);

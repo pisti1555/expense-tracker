@@ -50,7 +50,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public Page<TransactionDto> getTransactionsPaged(Long userId, PaginationAttributes attributes) {
-        var pageable = Pageable.ofSize(attributes.size()).withPage(attributes.page() - 1);
+        var pageable = Pageable.ofSize(attributes.size()).withPage(attributes.page());
         var transactions = transactionRepository.findPagedByUserId(userId, pageable);
         return transactions.map(Transaction::toDto);
     }
