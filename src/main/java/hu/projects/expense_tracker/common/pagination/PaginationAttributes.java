@@ -8,8 +8,7 @@ public record PaginationAttributes(
     private static final int MAX_SIZE = 50;
     private static final int MIN_SIZE = 1;
 
-    private static final int DEFAULT_NUMBER = 1;
-    private static final int MIN_NUMBER = 1;
+    private static final int MIN_NUMBER = 0;
 
     public PaginationAttributes {
         size = getValidPageSize(size);
@@ -24,8 +23,6 @@ public record PaginationAttributes(
     }
 
     private static int getValidPageNumber(int pgNumber) {
-        if (pgNumber == 0) return DEFAULT_NUMBER;
-        if (pgNumber < MIN_NUMBER) return MIN_NUMBER;
-        return pgNumber;
+        return Math.max(pgNumber, MIN_NUMBER);
     }
 }

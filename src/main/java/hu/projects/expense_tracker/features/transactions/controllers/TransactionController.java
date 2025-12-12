@@ -1,6 +1,8 @@
 package hu.projects.expense_tracker.features.transactions.controllers;
 
+import hu.projects.expense_tracker.services.http.HttpService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,7 +11,6 @@ import hu.projects.expense_tracker.features.transactions.dtos.CreateTransactionD
 import hu.projects.expense_tracker.features.transactions.dtos.TransactionDto;
 import hu.projects.expense_tracker.features.transactions.services.TransactionService;
 import hu.projects.expense_tracker.common.pagination.PaginationAttributes;
-import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/transactions", version = "1.0")
@@ -48,12 +49,14 @@ public class TransactionController {
     }
 
     @GetMapping
-    public List<TransactionDto> getTransactions(
+    public ResponseEntity<Page<TransactionDto>> getTransactions(
             @RequestParam Long userId,
             @RequestParam(required = false, defaultValue = "10") int size,
-            @RequestParam(required = false, defaultValue = "1") int page
+            @RequestParam(required = false, defaultValue = "0") int page
     ) {
         var pgAttributes = new PaginationAttributes(size, page);
-        return transactionService.getTransactionsPaged(userId, pgAttributes);
+        var result = transactionService.getTransactionsPaged(userId, pgAttributes);
+        var headers = HttpService.GeneratePaginationHeaders(result);
+        return ResponseEntity.ok().headers(headers).body(result);
     }
 }

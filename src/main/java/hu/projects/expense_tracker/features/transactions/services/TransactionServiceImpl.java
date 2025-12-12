@@ -1,6 +1,7 @@
 package hu.projects.expense_tracker.features.transactions.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,6 @@ import hu.projects.expense_tracker.features.transactions.repositories.Transactio
 import hu.projects.expense_tracker.features.users.repositories.UserRepository;
 import hu.projects.expense_tracker.common.pagination.PaginationAttributes;
 import java.util.Arrays;
-import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -49,10 +49,10 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public List<TransactionDto> getTransactionsPaged(Long userId, PaginationAttributes attributes) {
-        var pageable = Pageable.ofSize(attributes.size()).withPage(attributes.page() - 1);
+    public Page<TransactionDto> getTransactionsPaged(Long userId, PaginationAttributes attributes) {
+        var pageable = Pageable.ofSize(attributes.size()).withPage(attributes.page());
         var transactions = transactionRepository.findPagedByUserId(userId, pageable);
-        return transactions.stream().map(Transaction::toDto).toList();
+        return transactions.map(Transaction::toDto);
     }
 
     private Transaction getTransactionOrThrowNotFound(Long id, Long userId) {
