@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile("prod")
+@Profile("production")
 public class ProductionErrorMessageProvider implements EnvironmentBasedErrorMessageProvider {
     @Override
     public String getErrorMessage(String defaultMessage, String customMessage) {
