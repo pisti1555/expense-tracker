@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: 'postgres:17.6'
+    environment:
+      - 'POSTGRES_DB=expense-tracker'
+      - 'POSTGRES_PASSWORD=postgres'
+      - 'POSTGRES_USER=postgres'
+    expose:
+      - 5432
+    networks:
+      - expense-tracker-network
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    environment:
+      SPRING_PROFILES_ACTIVE: production
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/expense-tracker
+    depends_on:
+      - postgres
+    ports:
+      - '8080:8080'
+    networks:
+      - expense-tracker-network
+
+networks:
+  expense-tracker-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
