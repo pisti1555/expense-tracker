@@ -2,7 +2,7 @@ package hu.projects.expense_tracker.features.transactions.services;
 
 import hu.projects.expense_tracker.features.transactions.dtos.CreateTransactionDto;
 import hu.projects.expense_tracker.features.transactions.dtos.TransactionDto;
-import hu.projects.expense_tracker.pagination.PaginationAttributes;
+import hu.projects.expense_tracker.common.pagination.PaginationAttributes;
 import java.util.List;
 
 public interface TransactionService {

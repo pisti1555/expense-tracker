@@ -4,4 +4,4 @@ public record CreateTransactionDto(
         String category,
         boolean isExpense,
         double amount
-) { }
+) {}

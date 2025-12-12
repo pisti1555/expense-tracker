@@ -29,7 +29,6 @@ public class User {
     public static UserDto toDto(User user) {
         return new UserDto(
                 user.getId(),
-                user.transactions.stream().map(Transaction::toDto).toList(),
                 user.getCreatedAt().toString());
     }
 }

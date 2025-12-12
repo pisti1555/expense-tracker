@@ -1,4 +1,4 @@
-package hu.projects.expense_tracker.pagination;
+package hu.projects.expense_tracker.common.pagination;
 
 public record PaginationAttributes(
         int size,

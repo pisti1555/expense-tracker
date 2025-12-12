@@ -4,14 +4,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import hu.projects.expense_tracker.exceptions.NotFoundException;
+import hu.projects.expense_tracker.common.exceptions.NotFoundException;
 import hu.projects.expense_tracker.features.transactions.dtos.CreateTransactionDto;
 import hu.projects.expense_tracker.features.transactions.dtos.TransactionDto;
 import hu.projects.expense_tracker.features.transactions.entities.Transaction;
 import hu.projects.expense_tracker.features.transactions.enums.TransactionCategory;
 import hu.projects.expense_tracker.features.transactions.repositories.TransactionRepository;
 import hu.projects.expense_tracker.features.users.repositories.UserRepository;
-import hu.projects.expense_tracker.pagination.PaginationAttributes;
+import hu.projects.expense_tracker.common.pagination.PaginationAttributes;
 import java.util.Arrays;
 import java.util.List;
 
