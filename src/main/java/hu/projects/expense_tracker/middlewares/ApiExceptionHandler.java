@@ -3,7 +3,7 @@ package hu.projects.expense_tracker.middlewares;
 import hu.projects.expense_tracker.common.exceptions.NotFoundException;
 import hu.projects.expense_tracker.common.exceptions.UnexpectedException;
 import hu.projects.expense_tracker.common.models.error_responses.ErrorResponse;
-import hu.projects.expense_tracker.services.error_message_provider.EnvironmentBasedErrorResponseProvider;
+import hu.projects.expense_tracker.services.error_response_provider.EnvironmentBasedErrorResponseProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

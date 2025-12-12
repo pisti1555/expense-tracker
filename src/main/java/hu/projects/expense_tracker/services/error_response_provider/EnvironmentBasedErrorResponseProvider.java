@@ -1,4 +1,4 @@
-package hu.projects.expense_tracker.services.error_message_provider;
+package hu.projects.expense_tracker.services.error_response_provider;
 
 import hu.projects.expense_tracker.common.exceptions.ApiException;
 import hu.projects.expense_tracker.common.models.error_responses.ErrorResponse;
