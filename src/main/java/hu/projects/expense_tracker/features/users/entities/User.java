@@ -2,6 +2,7 @@ package hu.projects.expense_tracker.features.users.entities;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -13,18 +14,19 @@ import java.util.Collection;
 @Entity
 @Table(name = "users")
 @Getter @Setter
+@NoArgsConstructor
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false)
+    @Column(name = "id", nullable = false)
     private Long id;
 
-    @OneToMany(mappedBy = "user")
-    private Collection<Transaction> transactions;
-
     @CreationTimestamp
-    @Column(nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Collection<Transaction> transactions;
 
     public static UserDto toDto(User user) {
         return new UserDto(

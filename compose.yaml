@@ -19,7 +19,7 @@ services:
 
     environment:
       SPRING_PROFILES_ACTIVE: production
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/expense-tracker
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/expense_tracker
     depends_on:
       - postgres
     ports:
