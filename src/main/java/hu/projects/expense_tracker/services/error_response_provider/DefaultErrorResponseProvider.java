@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 @Service
-@Profile({"!production", "!dev"})
+@Profile({"!production & !dev"})
 public class DefaultErrorResponseProvider implements EnvironmentBasedErrorResponseProvider {
     @Override
     public ErrorResponse convertException(ApiException exception, String customMessage) {
