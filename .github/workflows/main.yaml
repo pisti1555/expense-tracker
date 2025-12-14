@@ -1,0 +1,90 @@
+name: Main workflow
+
+on:
+  pull_request:
+    branches:
+      - 'main'
+  push:
+    branches:
+      - 'main'
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  build-test-version:
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17.6
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_DB: github_actions_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    permissions:
+      contents: read
+      packages: write
+    env:
+      SPRING_PROFILES_ACTIVE: ci
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/github_actions_test
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Setup JDK 25
+        uses: actions/setup-java@v5
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      - name: Build and Test
+        run: mvn test
+
+      - name: Generate version
+        id: version
+        run: |
+          version_prefix=`mvn help:evaluate -Dexpression=project.version --quiet -DforceStdout | awk -F. '{print $1"."$2}'`
+          version="$version_prefix.${{ github.run_number }}"
+          echo "version=$version" >> $GITHUB_OUTPUT
+          mvn -B versions:set -DnewVersion="$version" -DgenerateBackupPoms=false
+
+  docker:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: build-test-version
+    permissions:
+      contents: read
+      packages: write
+    env:
+      SPRING_PROFILES_ACTIVE: ci
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build & Push Docker image
+        run: |
+          IMAGE_NAME=ghcr.io/${{ github.repository_owner }}/expense-tracker
+          VERSION=${{ needs.build-test-version.outputs.version }}
+          
+          docker build -t $IMAGE_NAME:$VERSION -t $IMAGE_NAME:latest .
+          docker push $IMAGE_NAME:$VERSION
+          docker push $IMAGE_NAME:latest

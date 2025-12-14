@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>hu.projects</groupId>
 	<artifactId>expense-tracker</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1</version>
 	<name>expense-tracker</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
