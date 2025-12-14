@@ -3,6 +3,7 @@
 - [Tech stack](#tech-stack)
 - [Features by routes](#features-by-routes)
 - [Usage](#usage)
+    - [API documentation](#api-documentation)
     - [Versioning](#versioning)
     - [Pagination](#pagination)
 
@@ -21,6 +22,11 @@ Java - Spring Boot 4 REST API for managing expenses.
 - Get transaction by ID
 
 ## Usage
+### API documentation
+API documentation is available at:
+- {Base URL}/scalar → Scalar web UI for API docs.
+- {Base URL}/v3/api-docs → API docs in JSON format.
+
 ### Versioning
 The version number must be passed in the API-Version header and is optional. 
 The default version is 1.0.

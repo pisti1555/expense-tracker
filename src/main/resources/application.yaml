@@ -1,3 +1,22 @@
+server:
+  port: 8080
 spring:
   profiles:
     default: dev
+  application:
+    name: expense_tracker
+  datasource:
+    platform: postgres
+    driverClassName: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+    baseline-version: 1
+    baseline-description: "init"
+    locations: classpath:db/migration
+    validate-on-migrate: true

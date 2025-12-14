@@ -1,19 +1,9 @@
-server:
-  port: 8080
 spring:
-  application:
-    name: expense-tracker
   datasource:
-    platform: postgres
-    driverClassName: org.postgresql.Driver
     url: ${SPRING_DATASOURCE_URL}
-    username: postgres
-    password: postgres
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     show-sql: false
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format-sql: true
