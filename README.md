@@ -4,6 +4,7 @@
 - [Features by routes](#features-by-routes)
 - [Usage](#usage)
     - [API documentation](#api-documentation)
+    - [Authentication](#authentication)
     - [Versioning](#versioning)
     - [Pagination](#pagination)
 
@@ -15,6 +16,10 @@ Java - Spring Boot 4 REST API for managing expenses.
 - PostgreSQL
 
 ## Features by routes
+### Auth
+- Login
+- Register
+
 ### Transactions
 - Add transaction
 - Remove transaction
@@ -26,6 +31,10 @@ Java - Spring Boot 4 REST API for managing expenses.
 API documentation is available at:
 - {Base URL}/scalar → Scalar web UI for API docs.
 - {Base URL}/v3/api-docs → API docs in JSON format.
+
+### Authentication
+There is JWT authentication implemented.
+The JWT token must be passed in the Authorization header.
 
 ### Versioning
 The version number must be passed in the API-Version header and is optional. 
