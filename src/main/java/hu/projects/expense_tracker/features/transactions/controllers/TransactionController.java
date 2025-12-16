@@ -13,7 +13,7 @@ import hu.projects.expense_tracker.features.transactions.services.TransactionSer
 import hu.projects.expense_tracker.common.pagination.PaginationAttributes;
 
 @RestController
-@RequestMapping(value = "/api/transactions", version = "1.0")
+@RequestMapping(value = "/api/transactions")
 public class TransactionController {
     private final TransactionService transactionService;
 
@@ -28,7 +28,7 @@ public class TransactionController {
             @RequestParam Long userId
     ) {
         var transactionDto = transactionService.createTransaction(dto, userId);
-        return ResponseEntity.created(URI.create("/api/v1/transactions/" + transactionDto.id())).body(transactionDto);
+        return ResponseEntity.created(URI.create("/api/transactions/" + transactionDto.id())).body(transactionDto);
     }
 
     @DeleteMapping("/{id}")

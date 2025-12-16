@@ -1,3 +1,11 @@
+logging:
+  level:
+    root: INFO
+    hu.projects.expense_tracker: DEBUG
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.hibernate: DEBUG
+    org.flywaydb: INFO
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/expense_tracker

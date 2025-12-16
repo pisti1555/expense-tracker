@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
-public class ApiExceptionHandler {
+public class ApiExceptionHandlerMiddleware {
     private final EnvironmentBasedErrorResponseProvider errorResponseProvider;
 
     @Autowired
-    public ApiExceptionHandler(EnvironmentBasedErrorResponseProvider errorResponseProvider) {
+    public ApiExceptionHandlerMiddleware(EnvironmentBasedErrorResponseProvider errorResponseProvider) {
         this.errorResponseProvider = errorResponseProvider;
     }
 
