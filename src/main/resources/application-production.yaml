@@ -1,3 +1,11 @@
+logging:
+  level:
+    root: WARN
+    hu.projects.expense_tracker: INFO
+    org.springframework.web: WARN
+    org.springframework.security: WARN
+    org.hibernate: OFF
+    org.flywaydb: INFO
 spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL}

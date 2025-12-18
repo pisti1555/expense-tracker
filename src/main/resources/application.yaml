@@ -13,6 +13,11 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
+  security:
+    jwt:
+      secret-key: 3cfa76ef14937c1c0ea519fd8fc057a80fcd04a7420f848bcd0a7567cf272e007b
+      expiration-time: 3600000
+      issuer: expense-tracker
   flyway:
     enabled: true
     baseline-on-migrate: true
