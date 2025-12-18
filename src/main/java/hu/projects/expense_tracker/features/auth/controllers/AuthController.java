@@ -2,8 +2,9 @@ package hu.projects.expense_tracker.features.auth.controllers;
 
 import hu.projects.expense_tracker.features.auth.dtos.LoginDto;
 import hu.projects.expense_tracker.features.auth.dtos.RegistrationDto;
+import hu.projects.expense_tracker.features.auth.dtos.TokenDto;
+import hu.projects.expense_tracker.features.auth.dtos.UserWithTokenDto;
 import hu.projects.expense_tracker.features.auth.services.AuthService;
-import hu.projects.expense_tracker.features.users.dtos.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,13 +25,14 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<UserDto> register(@RequestBody RegistrationDto dto) {
+    public ResponseEntity<UserWithTokenDto> register(@RequestBody RegistrationDto dto) {
         var registeredUser = authService.register(dto);
-        return ResponseEntity.created(URI.create("/api/users/" + registeredUser.id())).body(registeredUser);
+        return ResponseEntity.created(URI.create("/api/users/" + registeredUser.user().id())).body(registeredUser);
     }
 
     @PostMapping("/login")
-    public String authenticate(@RequestBody LoginDto dto) {
-        return authService.authenticate(dto);
+    public TokenDto authenticate(@RequestBody LoginDto dto) {
+        var token = authService.authenticate(dto);
+        return new TokenDto(token);
     }
 }

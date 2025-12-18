@@ -6,9 +6,9 @@ import hu.projects.expense_tracker.common.pagination.PaginationAttributes;
 import org.springframework.data.domain.Page;
 
 public interface TransactionService {
-    TransactionDto createTransaction(CreateTransactionDto dto, Long userId);
-    void deleteTransactionById(Long id, Long userId);
+    TransactionDto createTransaction(CreateTransactionDto dto, String username);
+    void deleteTransactionById(Long id, String username);
 
-    TransactionDto getTransactionById(Long id, Long userId);
-    Page<TransactionDto> getTransactionsPaged(Long userId, PaginationAttributes attributes);
+    TransactionDto getTransactionById(Long id, String username);
+    Page<TransactionDto> getTransactionsPaged(String username, PaginationAttributes attributes);
 }

@@ -2,10 +2,10 @@ package hu.projects.expense_tracker.features.auth.services;
 
 import hu.projects.expense_tracker.common.exceptions.UnauthorizedException;
 import hu.projects.expense_tracker.common.exceptions.UnexpectedException;
+import hu.projects.expense_tracker.features.auth.dtos.UserWithTokenDto;
 import hu.projects.expense_tracker.features.auth.repositories.AuthorityRepository;
 import hu.projects.expense_tracker.features.auth.dtos.LoginDto;
 import hu.projects.expense_tracker.features.auth.dtos.RegistrationDto;
-import hu.projects.expense_tracker.features.users.dtos.UserDto;
 import hu.projects.expense_tracker.features.users.entities.User;
 import hu.projects.expense_tracker.features.users.repositories.UserRepository;
 import hu.projects.expense_tracker.services.auth_token_service.AuthTokenService;
@@ -39,7 +39,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserDto register(RegistrationDto dto) {
+    public UserWithTokenDto register(RegistrationDto dto) {
         var userAuthority = authorityRepository.findByAuthority("ROLE_USER")
                 .orElseThrow(() -> new UnexpectedException("User authority not found."));
 
@@ -47,8 +47,9 @@ public class AuthServiceImpl implements AuthService {
         user.setAuthorities(Collections.singleton(userAuthority));
 
         var savedUser = userRepository.save(user);
+        var token = authTokenService.generateToken(savedUser);
 
-        return User.toDto(savedUser);
+        return new UserWithTokenDto(User.toDto(savedUser), token);
     }
 
     @Override
