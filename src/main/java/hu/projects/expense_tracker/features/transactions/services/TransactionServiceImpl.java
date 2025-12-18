@@ -27,8 +27,8 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionDto createTransaction(CreateTransactionDto dto, Long userId) {
-        var user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found."));
+    public TransactionDto createTransaction(CreateTransactionDto dto, String username) {
+        var user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found."));
         var category = getCategoryOrThrowNotFound(dto.category(), dto.isExpense());
 
         var transaction = new Transaction(user, category, dto.amount());
@@ -37,27 +37,27 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public void deleteTransactionById(Long id, Long userId) {
-        var transaction = getTransactionOrThrowNotFound(id, userId);
+    public void deleteTransactionById(Long id, String username) {
+        var transaction = getTransactionOrThrowNotFound(id, username);
         transactionRepository.delete(transaction);
     }
 
     @Override
-    public TransactionDto getTransactionById(Long id, Long userId) {
-        var transaction = getTransactionOrThrowNotFound(id, userId);
+    public TransactionDto getTransactionById(Long id, String username) {
+        var transaction = getTransactionOrThrowNotFound(id, username);
         return Transaction.toDto(transaction);
     }
 
     @Override
-    public Page<TransactionDto> getTransactionsPaged(Long userId, PaginationAttributes attributes) {
+    public Page<TransactionDto> getTransactionsPaged(String username, PaginationAttributes attributes) {
         var pageable = Pageable.ofSize(attributes.size()).withPage(attributes.page());
-        var transactions = transactionRepository.findPagedByUserId(userId, pageable);
+        var transactions = transactionRepository.findPagedByUsername(username, pageable);
         return transactions.map(Transaction::toDto);
     }
 
-    private Transaction getTransactionOrThrowNotFound(Long id, Long userId) {
+    private Transaction getTransactionOrThrowNotFound(Long id, String username) {
         var transaction = transactionRepository.findById(id).orElseThrow(() -> new NotFoundException("Transaction not found."));
-        if (!transaction.getUser().getId().equals(userId)) throw new NotFoundException("Transaction not found.");
+        if (!transaction.getUser().getUsername().equals(username)) throw new NotFoundException("Transaction not found.");
         return transaction;
     }
 
