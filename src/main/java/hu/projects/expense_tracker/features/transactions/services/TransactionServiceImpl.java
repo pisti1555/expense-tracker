@@ -1,5 +1,6 @@
 package hu.projects.expense_tracker.features.transactions.services;
 
+import hu.projects.expense_tracker.services.app_services.Slug;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,7 +30,8 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionDto createTransaction(CreateTransactionDto dto, String username) {
         var user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found."));
-        var category = getCategoryOrThrowNotFound(dto.category(), dto.isExpense());
+        var categorySlug = Slug.of(dto.category());
+        var category = getCategoryOrThrowNotFound(categorySlug, dto.isExpense());
 
         var transaction = new Transaction(user, category, dto.amount());
         var savedTransaction = transactionRepository.save(transaction);
@@ -61,9 +63,9 @@ public class TransactionServiceImpl implements TransactionService {
         return transaction;
     }
 
-    private TransactionCategory getCategoryOrThrowNotFound(String category, boolean isExpense) {
+    private TransactionCategory getCategoryOrThrowNotFound(String categorySlug, boolean isExpense) {
         return Arrays.stream(TransactionCategory.values())
-                .filter(c -> c.getDisplayName().equals(category) && c.isExpense() == isExpense)
+                .filter(c -> c.getName().equals(categorySlug) && c.isExpense() == isExpense)
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("Category not found."));
     }

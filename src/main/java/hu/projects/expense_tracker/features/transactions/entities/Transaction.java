@@ -16,8 +16,7 @@ import java.time.LocalDateTime;
 @Table(name = "transactions", indexes = {
         @Index(name = "transaction_category_idx", columnList = "category")
 })
-@Getter
-@Setter
+@Getter @Setter
 @NoArgsConstructor
 public class Transaction {
     @Id
@@ -52,7 +51,6 @@ public class Transaction {
     public static TransactionDto toDto(Transaction transaction) {
         return new TransactionDto(
                 transaction.getId(),
-                transaction.getUser().getId(),
                 transaction.getCategory().getDisplayName(),
                 transaction.getCategory().isExpense(),
                 transaction.getAmount(),
