@@ -1,8 +1,7 @@
 package hu.projects.expense_tracker.features.transactions.services;
 
-import hu.projects.expense_tracker.services.app_services.Slug;
+import hu.projects.expense_tracker.common.pagination.PagedResult;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -30,8 +29,8 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionDto createTransaction(CreateTransactionDto dto, String username) {
         var user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found."));
-        var categorySlug = Slug.of(dto.category());
-        var category = getCategoryOrThrowNotFound(categorySlug, dto.isExpense());
+        var categorySlug = dto.categorySlug();
+        var category = getCategoryOrThrowNotFound(categorySlug);
 
         var transaction = new Transaction(user, category, dto.amount());
         var savedTransaction = transactionRepository.save(transaction);
@@ -51,10 +50,10 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Page<TransactionDto> getTransactionsPaged(String username, PaginationAttributes attributes) {
+    public PagedResult<TransactionDto> getTransactionsPaged(String username, PaginationAttributes attributes) {
         var pageable = Pageable.ofSize(attributes.size()).withPage(attributes.page());
         var transactions = transactionRepository.findPagedByUsername(username, pageable);
-        return transactions.map(Transaction::toDto);
+        return PagedResult.create(transactions.map(Transaction::toDto));
     }
 
     private Transaction getTransactionOrThrowNotFound(Long id, String username) {
@@ -63,9 +62,9 @@ public class TransactionServiceImpl implements TransactionService {
         return transaction;
     }
 
-    private TransactionCategory getCategoryOrThrowNotFound(String categorySlug, boolean isExpense) {
+    private TransactionCategory getCategoryOrThrowNotFound(String categorySlug) {
         return Arrays.stream(TransactionCategory.values())
-                .filter(c -> c.getName().equals(categorySlug) && c.isExpense() == isExpense)
+                .filter(c -> c.getName().equals(categorySlug))
                 .findFirst()
                 .orElseThrow(() -> new NotFoundException("Category not found."));
     }

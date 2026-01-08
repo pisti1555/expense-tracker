@@ -8,4 +8,8 @@ public class Slug {
                 .replace("&", "and")
                 .replaceAll("[^a-z_]", "");
     }
+
+    public static boolean isSlugFormat(String str) {
+        return str.matches("[a-z_]+");
+    }
 }

@@ -1,16 +1,16 @@
 package hu.projects.expense_tracker.services.http;
 
-import org.springframework.data.domain.Page;
+import hu.projects.expense_tracker.common.pagination.PagedResult;
 import org.springframework.http.HttpHeaders;
 
 public class HttpService {
-    public static HttpHeaders GeneratePaginationHeaders(Page<?> page) {
+    public static HttpHeaders GeneratePaginationHeaders(PagedResult<?> page) {
         var headers = new HttpHeaders();
 
-        var xCurrentPage = String.valueOf(page.getNumber());
+        var xCurrentPage = String.valueOf(page.getPage());
         var xPageSize = String.valueOf(page.getSize());
         var xTotalPages = String.valueOf(page.getTotalPages());
-        var xTotalElements= String.valueOf(page.getTotalElements());
+        var xTotalElements= String.valueOf(page.getTotalItems());
 
         headers.add("X-Current-Page", xCurrentPage);
         headers.add("X-Page-Size", xPageSize);

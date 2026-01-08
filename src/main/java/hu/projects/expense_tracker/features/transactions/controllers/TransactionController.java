@@ -1,8 +1,9 @@
 package hu.projects.expense_tracker.features.transactions.controllers;
 
+import hu.projects.expense_tracker.common.pagination.PagedResult;
 import hu.projects.expense_tracker.services.http.HttpService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +25,7 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity<TransactionDto> create(@RequestBody CreateTransactionDto dto, Authentication authentication) {
+    public ResponseEntity<TransactionDto> create(@RequestBody @Valid CreateTransactionDto dto, Authentication authentication) {
         var transactionDto = transactionService.createTransaction(dto, authentication.getName());
         return ResponseEntity.created(URI.create("/api/transactions/" + transactionDto.id())).body(transactionDto);
     }
@@ -41,7 +42,7 @@ public class TransactionController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<TransactionDto>> getTransactions(
+    public ResponseEntity<PagedResult<TransactionDto>> getTransactions(
             @RequestParam(required = false, defaultValue = "10") int size,
             @RequestParam(required = false, defaultValue = "0") int page,
             Authentication authentication
