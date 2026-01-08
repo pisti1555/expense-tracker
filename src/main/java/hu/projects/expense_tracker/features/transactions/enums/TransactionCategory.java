@@ -4,22 +4,24 @@ import lombok.Getter;
 
 @Getter
 public enum TransactionCategory {
-    BANK_TRANSFER_INCOMING("Bank Transfer (income)", false),
-    BANK_TRANSFER_OUTGOING("Bank Transfer (outgoing)", true),
-    TRANSPORTATION("Transportation", true),
-    GROCERIES("Groceries", true),
-    TRAVEL("Travel", true),
-    BILLS("Bills", true),
-    ENTERTAINMENT("Entertainment", true),
-    DINING_AND_RESTAURANTS("Dining & Restaurants", true),
-    CLOTHING("Clothing", true),
-    OTHER("Other", true);
+    BANK_TRANSFER_INCOMING("bank_transfer_income", "Bank Transfer (income)", false),
+    BANK_TRANSFER_OUTGOING("bank_transfer_outgoing", "Bank Transfer (outgoing)", true),
+    TRANSPORTATION("transportation", "Transportation", true),
+    GROCERIES("groceries", "Groceries", true),
+    TRAVEL("travel", "Travel", true),
+    BILLS("bills", "Bills", true),
+    ENTERTAINMENT("entertainment", "Entertainment", true),
+    DINING_AND_RESTAURANTS("dining_and_restaurants", "Dining & Restaurants", true),
+    CLOTHING("clothing", "Clothing", true),
+    OTHER("other", "Other", true);
 
-    TransactionCategory(String displayName, boolean isExpense) {
+    TransactionCategory(String name, String displayName, boolean isExpense) {
+        this.name = name;
         this.displayName = displayName;
         this.isExpense = isExpense;
     }
 
+    private final String name;
     private final String displayName;
     private final boolean isExpense;
 }

@@ -12,6 +12,7 @@ import hu.projects.expense_tracker.services.auth_token_service.AuthTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -54,12 +55,12 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String authenticate(LoginDto dto) {
-        var authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(dto.username(), dto.password())
-        );
-
-        if (!authentication.isAuthenticated()) {
-            throw new UnauthorizedException("Invalid credentials.");
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(dto.username(), dto.password())
+            );
+        } catch (AuthenticationException e) {
+            throw new UnauthorizedException("Invalid username or password.");
         }
 
         var user = userRepository.findByUsername(dto.username()).orElseThrow(() -> new UnexpectedException("User not found."));
