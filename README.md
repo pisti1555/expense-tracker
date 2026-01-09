@@ -6,7 +6,7 @@
     - [API documentation](#api-documentation)
     - [Authentication](#authentication)
     - [Versioning](#versioning)
-    - [Pagination](#pagination)
+    - [Paging & Sorting](#paging--sorting)
 
 ## Overview
 Java - Spring Boot 4 REST API for managing expenses.
@@ -44,21 +44,54 @@ The JWT token must be passed in the Authorization header → Bearer { token }.
 The version number must be passed in the API-Version header and is optional. 
 The default version is 1.0.
 
-### Pagination
+### Paging & Sorting
 When making a GET request for multiple elements, the API returns a PagedList type response. Specifying the pagination params are optional, but then
-the default values are being used which are page=0 and size=10. If the maximum value of size (50) is exceeded, then the maximum is used instead.
+the default values are being used which are page=1 and size=10. If the maximum value of size (50) is exceeded, then the maximum is used instead.
 
-Important note: The page number starts from 0, not 1.
+Sorting can be achieved by adding the param sort={field name},{direction (asc/desc)}
 
-So for example, you can see the value of "page" is 1 and "hasPrevious" is true in the response body of this request: /api/transactions?page=1&size=20,
-because page=1 refers to the second page.
+Example of a paged response: 
+
+    api/transactions?page=1&size=55&sort=createdAt,desc
 
     {
         "hasNext": false,
-        "hasPrevious": true,
-        "items": [],
+        "hasPrevious": false,
+        "items": [
+            {
+                "id": 3,
+                "categoryName": "Travel",
+                "categorySlug": "travel",
+                "isExpense": true,
+                "amount": 24000.0,
+                "createdAt": "2026-01-09T13:52:56.211807"
+            },
+            {
+                "id": 2,
+                "categoryName": "Bills",
+                "categorySlug": "bills",
+                "isExpense": true,
+                "amount": 11000.0,
+                "createdAt": "2026-01-09T13:52:47.354522"
+            },
+            {
+                "id": 1,
+                "categoryName": "Bills",
+                "categorySlug": "bills",
+                "isExpense": true,
+                "amount": 7600.0,
+                "createdAt": "2026-01-09T13:52:37.304648"
+            }
+        ],
         "page": 1,
-        "size": 20,
+        "size": 50,
+        "sorted": true,
+        "sortedBy": [
+            {
+                "property": "createdAt",
+                "direction": "DESC"
+            }
+        ],
         "totalItems": 3,
         "totalPages": 1
     }

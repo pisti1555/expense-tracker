@@ -12,7 +12,7 @@ import hu.projects.expense_tracker.features.transactions.entities.Transaction;
 import hu.projects.expense_tracker.features.transactions.enums.TransactionCategory;
 import hu.projects.expense_tracker.features.transactions.repositories.TransactionRepository;
 import hu.projects.expense_tracker.features.users.repositories.UserRepository;
-import hu.projects.expense_tracker.common.pagination.PaginationAttributes;
+
 import java.util.Arrays;
 
 @Service
@@ -50,8 +50,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public PagedResult<TransactionDto> getTransactionsPaged(String username, PaginationAttributes attributes) {
-        var pageable = Pageable.ofSize(attributes.size()).withPage(attributes.page());
+    public PagedResult<TransactionDto> getTransactionsPaged(String username, Pageable pageable) {
         var transactions = transactionRepository.findPagedByUsername(username, pageable);
         return PagedResult.create(transactions.map(Transaction::toDto));
     }
