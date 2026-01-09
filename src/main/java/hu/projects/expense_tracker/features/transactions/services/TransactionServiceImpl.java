@@ -1,6 +1,7 @@
 package hu.projects.expense_tracker.features.transactions.services;
 
 import hu.projects.expense_tracker.common.pagination.PagedResult;
+import hu.projects.expense_tracker.common.validations.app_validator_services.PageableValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import hu.projects.expense_tracker.features.transactions.enums.TransactionCatego
 import hu.projects.expense_tracker.features.transactions.repositories.TransactionRepository;
 import hu.projects.expense_tracker.features.users.repositories.UserRepository;
 
-import java.util.Arrays;
+import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -30,7 +31,7 @@ public class TransactionServiceImpl implements TransactionService {
     public TransactionDto createTransaction(CreateTransactionDto dto, String username) {
         var user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found."));
         var categorySlug = dto.categorySlug();
-        var category = getCategoryOrThrowNotFound(categorySlug);
+        var category = TransactionCategory.getCategoryBySlugOrThrow(categorySlug);
 
         var transaction = new Transaction(user, category, dto.amount());
         var savedTransaction = transactionRepository.save(transaction);
@@ -51,6 +52,7 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public PagedResult<TransactionDto> getTransactionsPaged(String username, Pageable pageable) {
+        PageableValidator.throwIfSortInvalid(pageable, List.of("id", "createdAt", "amount"));
         var transactions = transactionRepository.findPagedByUsername(username, pageable);
         return PagedResult.create(transactions.map(Transaction::toDto));
     }
@@ -59,12 +61,5 @@ public class TransactionServiceImpl implements TransactionService {
         var transaction = transactionRepository.findById(id).orElseThrow(() -> new NotFoundException("Transaction not found."));
         if (!transaction.getUser().getUsername().equals(username)) throw new NotFoundException("Transaction not found.");
         return transaction;
-    }
-
-    private TransactionCategory getCategoryOrThrowNotFound(String categorySlug) {
-        return Arrays.stream(TransactionCategory.values())
-                .filter(c -> c.getName().equals(categorySlug))
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Category not found."));
     }
 }

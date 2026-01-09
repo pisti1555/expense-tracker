@@ -1,6 +1,5 @@
-package hu.projects.expense_tracker.common.validations.slug;
+package hu.projects.expense_tracker.common.validations.annotation_validators.slug;
 
-import hu.projects.expense_tracker.services.app_services.Slug;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -8,6 +7,6 @@ public class SlugFormatValidator implements ConstraintValidator<SlugFormat, Stri
     @Override
     public boolean isValid(String str, ConstraintValidatorContext constraintValidatorContext) {
         if (str == null || str.isBlank()) return false;
-        return Slug.isSlugFormat(str);
+        return str.matches("[a-z_]+");
     }
 }

@@ -8,6 +8,8 @@ import hu.projects.expense_tracker.features.transactions.dtos.TransactionDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +32,7 @@ public class ReportController {
     public PagedResult<TransactionDto> getTransactionInCategory(
             Authentication authentication,
             @PathVariable String category,
-            Pageable pageable
+            @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
     ) {
         return reportService.getTransactionsInCategory(authentication.getName(), category, pageable);
     }

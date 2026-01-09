@@ -4,6 +4,8 @@ import hu.projects.expense_tracker.common.pagination.PagedResult;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +43,7 @@ public class TransactionController {
     }
 
     @GetMapping
-    public PagedResult<TransactionDto> getTransactions(Pageable pageable, Authentication authentication) {
+    public PagedResult<TransactionDto> getTransactions(@PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
         return transactionService.getTransactionsPaged(authentication.getName(), pageable);
     }
 }

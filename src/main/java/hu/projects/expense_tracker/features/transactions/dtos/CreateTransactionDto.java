@@ -1,6 +1,6 @@
 package hu.projects.expense_tracker.features.transactions.dtos;
 
-import hu.projects.expense_tracker.common.validations.slug.SlugFormat;
+import hu.projects.expense_tracker.common.validations.annotation_validators.slug.SlugFormat;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 

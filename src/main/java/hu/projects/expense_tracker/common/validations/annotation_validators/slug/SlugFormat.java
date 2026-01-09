@@ -1,4 +1,4 @@
-package hu.projects.expense_tracker.common.validations.slug;
+package hu.projects.expense_tracker.common.validations.annotation_validators.slug;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;

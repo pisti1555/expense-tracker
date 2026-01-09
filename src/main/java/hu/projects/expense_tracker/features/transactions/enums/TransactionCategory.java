@@ -1,6 +1,9 @@
 package hu.projects.expense_tracker.features.transactions.enums;
 
+import hu.projects.expense_tracker.common.exceptions.NotFoundException;
 import lombok.Getter;
+
+import java.util.Arrays;
 
 @Getter
 public enum TransactionCategory {
@@ -15,13 +18,20 @@ public enum TransactionCategory {
     CLOTHING("clothing", "Clothing", true),
     OTHER("other", "Other", true);
 
+    private final String name;
+    private final String displayName;
+    private final boolean isExpense;
+
     TransactionCategory(String name, String displayName, boolean isExpense) {
         this.name = name;
         this.displayName = displayName;
         this.isExpense = isExpense;
     }
 
-    private final String name;
-    private final String displayName;
-    private final boolean isExpense;
+    public static TransactionCategory getCategoryBySlugOrThrow(String categorySlug) {
+        return Arrays.stream(values())
+                .filter(c -> c.getName().equals(categorySlug))
+                .findFirst()
+                .orElseThrow(() -> new NotFoundException("Category not found. Options are: " + Arrays.toString(Arrays.stream(values()).map(c -> c.name).toArray())));
+    }
 }

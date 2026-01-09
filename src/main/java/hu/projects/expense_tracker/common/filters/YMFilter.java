@@ -1,6 +1,6 @@
 package hu.projects.expense_tracker.common.filters;
 
-import hu.projects.expense_tracker.common.validations.year_past_or_present.YearPastOrPresent;
+import hu.projects.expense_tracker.common.validations.annotation_validators.year_past_or_present.YearPastOrPresent;
 import jakarta.validation.constraints.*;
 
 public record YMFilter(
