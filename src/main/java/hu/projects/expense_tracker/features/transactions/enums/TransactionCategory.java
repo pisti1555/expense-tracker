@@ -11,7 +11,6 @@ public enum TransactionCategory {
     BANK_TRANSFER_OUTGOING("bank_transfer_outgoing", "Bank Transfer (outgoing)", true),
     TRANSPORTATION("transportation", "Transportation", true),
     GROCERIES("groceries", "Groceries", true),
-    TRAVEL("travel", "Travel", true),
     BILLS("bills", "Bills", true),
     ENTERTAINMENT("entertainment", "Entertainment", true),
     DINING_AND_RESTAURANTS("dining_and_restaurants", "Dining & Restaurants", true),

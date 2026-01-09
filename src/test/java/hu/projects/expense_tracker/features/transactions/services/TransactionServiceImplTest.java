@@ -8,7 +8,7 @@ import hu.projects.expense_tracker.features.transactions.entities.Transaction;
 import hu.projects.expense_tracker.features.transactions.repositories.TransactionRepository;
 import hu.projects.expense_tracker.features.users.entities.User;
 import hu.projects.expense_tracker.features.users.repositories.UserRepository;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,13 +30,13 @@ class TransactionServiceImplTest {
     @InjectMocks
     private TransactionServiceImpl transactionService;
 
-    private User user;
-    private Transaction transaction;
+    private static User user;
+    private static Transaction transaction;
 
-    @BeforeEach
-    void setUp() {
-        this.user = UserFactory.create();
-        this.transaction = TransactionFactory.fromDto(TransactionFactory.newCreateTransactionDto(), this.user);
+    @BeforeAll
+    static void beforeAll() {
+        user = UserFactory.create();
+        transaction = TransactionFactory.create(user);
     }
 
     @Test
