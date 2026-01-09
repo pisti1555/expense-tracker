@@ -7,6 +7,7 @@ import jakarta.validation.ConstraintValidatorContext;
 public class SlugFormatValidator implements ConstraintValidator<SlugFormat, String> {
     @Override
     public boolean isValid(String str, ConstraintValidatorContext constraintValidatorContext) {
+        if (str == null || str.isBlank()) return false;
         return Slug.isSlugFormat(str);
     }
 }
