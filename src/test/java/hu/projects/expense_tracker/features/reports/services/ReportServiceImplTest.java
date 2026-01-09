@@ -34,29 +34,26 @@ class ReportServiceImplTest {
     @InjectMocks
     private ReportServiceImpl reportService;
 
-    private static User user;
-    private static List<Transaction> transactions;
+    private static final User USER = UserFactory.create();
+    private static final List<Transaction> TRANSACTIONS = new ArrayList<>();
 
     @BeforeAll
     static void beforeAll() {
-        user = UserFactory.create();
-        transactions = new ArrayList<>();
-
         var january = LocalDateTimeFactory.createMultiple(12, 2025, 1);
         var february = LocalDateTimeFactory.createMultiple(9, 2025, 2);
 
-        transactions.addAll(TransactionFactory.createMultiple(january, user));
-        transactions.addAll(TransactionFactory.createMultiple(february, user));
+        TRANSACTIONS.addAll(TransactionFactory.createMultiple(january, USER));
+        TRANSACTIONS.addAll(TransactionFactory.createMultiple(february, USER));
     }
 
     @Test
     void getMonthlyReport_ShouldPass() {
         // Arrange
         int year = 2025, month = 1;
-        when(transactionRepository.findInTimeRangeByUsername(any(), any(), any())).thenReturn(transactions);
+        when(transactionRepository.findInTimeRangeByUsername(any(), any(), any())).thenReturn(TRANSACTIONS);
 
         // Act
-        var result = reportService.getMonthlyReport(user.getUsername(), year, month);
+        var result = reportService.getMonthlyReport(USER.getUsername(), year, month);
 
         // Assert
         assertEquals(year, result.year());
@@ -68,15 +65,15 @@ class ReportServiceImplTest {
         // Arrange
         int year = 2025, month = 1;
         var customTransactions = List.of(
-                TransactionFactory.create(user, TransactionCategory.TRANSPORTATION, 10000, LocalDateTimeFactory.create(year, month)),
-                TransactionFactory.create(user, TransactionCategory.TRANSPORTATION, 5000, LocalDateTimeFactory.create(year, month)),
-                TransactionFactory.create(user, TransactionCategory.BANK_TRANSFER_INCOMING, 90000, LocalDateTimeFactory.create(year, month)),
-                TransactionFactory.create(user, TransactionCategory.CLOTHING, 8000, LocalDateTimeFactory.create(year, month))
+                TransactionFactory.create(USER, TransactionCategory.TRANSPORTATION, 10000, LocalDateTimeFactory.create(year, month)),
+                TransactionFactory.create(USER, TransactionCategory.TRANSPORTATION, 5000, LocalDateTimeFactory.create(year, month)),
+                TransactionFactory.create(USER, TransactionCategory.BANK_TRANSFER_INCOMING, 90000, LocalDateTimeFactory.create(year, month)),
+                TransactionFactory.create(USER, TransactionCategory.CLOTHING, 8000, LocalDateTimeFactory.create(year, month))
         );
         when(transactionRepository.findInTimeRangeByUsername(any(), any(), any())).thenReturn(customTransactions);
 
         // Act
-        var result = reportService.getMonthlyReport(user.getUsername(), year, month);
+        var result = reportService.getMonthlyReport(USER.getUsername(), year, month);
 
         // Assert
         assertEquals(23000, result.totalExpenseAmount());
@@ -93,7 +90,7 @@ class ReportServiceImplTest {
         when(transactionRepository.findInTimeRangeByUsername(any(), any(), any())).thenReturn(List.of());
 
         // Act
-        var result = reportService.getMonthlyReport(user.getUsername(), year, month);
+        var result = reportService.getMonthlyReport(USER.getUsername(), year, month);
 
         // Assert
         assertEquals(year, result.year());
@@ -109,13 +106,13 @@ class ReportServiceImplTest {
         // Arrange
         var category = "transportation";
         var pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
-        var page = new PageImpl<>(transactions, pageable, transactions.size());
+        var page = new PageImpl<>(TRANSACTIONS, pageable, TRANSACTIONS.size());
 
         when(transactionRepository.findInCategoryByUsername(any(), any(), any()))
                 .thenReturn(page);
 
         // Act
-        var result = reportService.getTransactionsInCategory(user.getUsername(), category, pageable);
+        var result = reportService.getTransactionsInCategory(USER.getUsername(), category, pageable);
 
         // Assert
         assertEquals(page.stream().map(Transaction::toDto).toList(), result.getItems().stream().toList());
@@ -124,7 +121,7 @@ class ReportServiceImplTest {
         assertTrue(page.getSort().isSorted());
 
         verify(transactionRepository, times(1))
-                .findInCategoryByUsername(user.getUsername(), TransactionCategory.TRANSPORTATION, pageable);
+                .findInCategoryByUsername(USER.getUsername(), TransactionCategory.TRANSPORTATION, pageable);
     }
 
     @Test
@@ -134,7 +131,7 @@ class ReportServiceImplTest {
         var pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
 
         // Act & Assert
-        assertThrows(NotFoundException.class, () -> reportService.getTransactionsInCategory(user.getUsername(), category, pageable));
+        assertThrows(NotFoundException.class, () -> reportService.getTransactionsInCategory(USER.getUsername(), category, pageable));
         verifyNoInteractions(transactionRepository);
     }
 
@@ -145,7 +142,7 @@ class ReportServiceImplTest {
         var pageable = PageRequest.of(0, 10, Sort.by("invalid").descending());
 
         // Act & Assert
-        assertThrows(BadRequestException.class, () -> reportService.getTransactionsInCategory(user.getUsername(), category, pageable));
+        assertThrows(BadRequestException.class, () -> reportService.getTransactionsInCategory(USER.getUsername(), category, pageable));
         verifyNoInteractions(transactionRepository);
     }
 }

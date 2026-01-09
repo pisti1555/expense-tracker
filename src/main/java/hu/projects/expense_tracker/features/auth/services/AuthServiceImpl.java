@@ -1,5 +1,6 @@
 package hu.projects.expense_tracker.features.auth.services;
 
+import hu.projects.expense_tracker.common.exceptions.BadRequestException;
 import hu.projects.expense_tracker.common.exceptions.UnauthorizedException;
 import hu.projects.expense_tracker.common.exceptions.UnexpectedException;
 import hu.projects.expense_tracker.features.auth.dtos.UserWithTokenDto;
@@ -44,6 +45,8 @@ public class AuthServiceImpl implements AuthService {
         var userAuthority = authorityRepository.findByAuthority("ROLE_USER")
                 .orElseThrow(() -> new UnexpectedException("User authority not found."));
 
+        throwIfUsernameExists(dto.username());
+
         var user = new User(dto.username(), passwordEncoder.encode(dto.password()));
         user.setAuthorities(Collections.singleton(userAuthority));
 
@@ -65,5 +68,11 @@ public class AuthServiceImpl implements AuthService {
 
         var user = userRepository.findByUsername(dto.username()).orElseThrow(() -> new UnexpectedException("User not found."));
         return authTokenService.generateToken(user);
+    }
+
+    private void throwIfUsernameExists(String username) {
+        if (userRepository.existsByUsername(username)) {
+            throw new BadRequestException("Username already exists.");
+        }
     }
 }

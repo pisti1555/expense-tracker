@@ -8,7 +8,6 @@ import hu.projects.expense_tracker.features.transactions.entities.Transaction;
 import hu.projects.expense_tracker.features.transactions.repositories.TransactionRepository;
 import hu.projects.expense_tracker.features.users.entities.User;
 import hu.projects.expense_tracker.features.users.repositories.UserRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,26 +29,20 @@ class TransactionServiceImplTest {
     @InjectMocks
     private TransactionServiceImpl transactionService;
 
-    private static User user;
-    private static Transaction transaction;
-
-    @BeforeAll
-    static void beforeAll() {
-        user = UserFactory.create();
-        transaction = TransactionFactory.create(user);
-    }
+    private static final User USER = UserFactory.create();
+    private static final Transaction TRANSACTION = TransactionFactory.create(USER);
 
     @Test
     void createTransaction_ShouldPass() {
         // Arrange
         var createTransactionDto = TransactionFactory.newCreateTransactionDto();
-        var transaction = TransactionFactory.fromDto(createTransactionDto, user);
+        var transaction = TransactionFactory.fromDto(createTransactionDto, USER);
 
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(userRepository.findByUsername(USER.getUsername())).thenReturn(Optional.of(USER));
         when(transactionRepository.save(any(Transaction.class))).thenReturn(transaction);
 
         // Act
-        var savedTransaction = transactionService.createTransaction(createTransactionDto, user.getUsername());
+        var savedTransaction = transactionService.createTransaction(createTransactionDto, USER.getUsername());
 
         // Assert
         assertEquals(createTransactionDto.categorySlug(), savedTransaction.categorySlug());
@@ -63,20 +56,20 @@ class TransactionServiceImplTest {
         // Arrange
         var createTransactionDto = new CreateTransactionDto("not_existing_category", 10000.0);
 
-        when(userRepository.findByUsername(user.getUsername())).thenReturn(Optional.of(user));
+        when(userRepository.findByUsername(USER.getUsername())).thenReturn(Optional.of(USER));
 
         // Act & Assert
-        assertThrows(NotFoundException.class, () -> transactionService.createTransaction(createTransactionDto, user.getUsername()));
-        verify(transactionRepository, times(0)).save(any(Transaction.class));
+        assertThrows(NotFoundException.class, () -> transactionService.createTransaction(createTransactionDto, USER.getUsername()));
+        verify(transactionRepository, never()).save(any(Transaction.class));
     }
 
     @Test
     void deleteTransactionById_ShouldPass() {
         // Arrange
-        when(transactionRepository.findById(transaction.getId())).thenReturn(Optional.of(transaction));
+        when(transactionRepository.findById(TRANSACTION.getId())).thenReturn(Optional.of(TRANSACTION));
 
         // Act
-        transactionService.deleteTransactionById(transaction.getId(), user.getUsername());
+        transactionService.deleteTransactionById(TRANSACTION.getId(), USER.getUsername());
 
         // Assert
         verify(transactionRepository, times(1)).delete(any(Transaction.class));
@@ -88,8 +81,8 @@ class TransactionServiceImplTest {
         when(transactionRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(NotFoundException.class, () -> transactionService.deleteTransactionById(1L, user.getUsername()));
-        verify(transactionRepository, times(0)).delete(any(Transaction.class));
+        assertThrows(NotFoundException.class, () -> transactionService.deleteTransactionById(1L, USER.getUsername()));
+        verify(transactionRepository, never()).delete(any(Transaction.class));
     }
 
     @Test
@@ -97,28 +90,28 @@ class TransactionServiceImplTest {
         // Arrange
         var otherUser = UserFactory.create();
 
-        when(transactionRepository.findById(any(Long.class))).thenReturn(Optional.empty());
+        when(transactionRepository.findById(any(Long.class))).thenReturn(Optional.of(TRANSACTION));
 
         // Act & Assert
-        assertThrows(NotFoundException.class, () -> transactionService.deleteTransactionById(transaction.getId(), otherUser.getUsername()));
-        verify(transactionRepository, times(0)).delete(any(Transaction.class));
+        assertThrows(NotFoundException.class, () -> transactionService.deleteTransactionById(TRANSACTION.getId(), otherUser.getUsername()));
+        verify(transactionRepository, never()).delete(any(Transaction.class));
     }
 
     @Test
     void getTransactionById_ShouldPass() {
         // Arrange
-        when(transactionRepository.findById(transaction.getId())).thenReturn(Optional.of(transaction));
+        when(transactionRepository.findById(TRANSACTION.getId())).thenReturn(Optional.of(TRANSACTION));
 
         // Act
-        var foundTransaction = transactionService.getTransactionById(transaction.getId(), user.getUsername());
+        var foundTransaction = transactionService.getTransactionById(TRANSACTION.getId(), USER.getUsername());
 
         // Assert
-        assertEquals(transaction.getId(), foundTransaction.id());
-        assertEquals(transaction.getCategory().getName(), foundTransaction.categorySlug());
-        assertEquals(transaction.getCategory().getDisplayName(), foundTransaction.categoryName());
-        assertEquals(transaction.getAmount(), foundTransaction.amount());
+        assertEquals(TRANSACTION.getId(), foundTransaction.id());
+        assertEquals(TRANSACTION.getCategory().getName(), foundTransaction.categorySlug());
+        assertEquals(TRANSACTION.getCategory().getDisplayName(), foundTransaction.categoryName());
+        assertEquals(TRANSACTION.getAmount(), foundTransaction.amount());
 
-        verify(transactionRepository, times(1)).findById(transaction.getId());
+        verify(transactionRepository, times(1)).findById(TRANSACTION.getId());
     }
 
     @Test
@@ -127,7 +120,7 @@ class TransactionServiceImplTest {
         when(transactionRepository.findById(any(Long.class))).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(NotFoundException.class, () -> transactionService.getTransactionById(1L, user.getUsername()));
+        assertThrows(NotFoundException.class, () -> transactionService.getTransactionById(1L, USER.getUsername()));
     }
 
     @Test
@@ -135,9 +128,9 @@ class TransactionServiceImplTest {
         // Arrange
         var otherUser = UserFactory.create();
 
-        when(transactionRepository.findById(any(Long.class))).thenReturn(Optional.of(transaction));
+        when(transactionRepository.findById(any(Long.class))).thenReturn(Optional.of(TRANSACTION));
 
         // Act & Assert
-        assertThrows(NotFoundException.class, () -> transactionService.deleteTransactionById(transaction.getId(), otherUser.getUsername()));
+        assertThrows(NotFoundException.class, () -> transactionService.deleteTransactionById(TRANSACTION.getId(), otherUser.getUsername()));
     }
 }
