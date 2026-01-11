@@ -1,4 +1,4 @@
-package hu.projects.expense_tracker.common.validations.year_past_or_present;
+package hu.projects.expense_tracker.common.validations.annotation_validators.year_past_or_present;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

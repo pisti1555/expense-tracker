@@ -14,12 +14,12 @@ import java.util.List;
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    @Query("SELECT t FROM Transaction t WHERE t.user.username = :username ORDER BY t.createdAt DESC")
+    @Query("SELECT t FROM Transaction t WHERE t.user.username = :username")
     Page<Transaction> findPagedByUsername(String username, Pageable pageable);
 
-    @Query("SELECT t FROM Transaction t WHERE t.user.username = :username AND t.createdAt >= :start AND t.createdAt < :end ORDER BY t.createdAt DESC")
+    @Query("SELECT t FROM Transaction t WHERE t.user.username = :username AND t.createdAt >= :start AND t.createdAt < :end")
     List<Transaction> findInTimeRangeByUsername(String username, LocalDateTime start, LocalDateTime end);
 
-    @Query("SELECT t FROM Transaction t WHERE t.user.username = :username AND t.category = :category ORDER BY t.createdAt DESC")
+    @Query("SELECT t FROM Transaction t WHERE t.user.username = :username AND t.category = :category")
     Page<Transaction> findInCategoryByUsername(String username, TransactionCategory category, Pageable pageable);
 }

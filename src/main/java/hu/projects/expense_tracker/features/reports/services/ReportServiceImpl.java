@@ -1,15 +1,15 @@
 package hu.projects.expense_tracker.features.reports.services;
 
 import hu.projects.expense_tracker.common.exceptions.BadRequestException;
-import hu.projects.expense_tracker.common.pagination.PaginationAttributes;
+import hu.projects.expense_tracker.common.pagination.PagedResult;
+import hu.projects.expense_tracker.common.validations.app_validator_services.PageableValidator;
 import hu.projects.expense_tracker.features.reports.dtos.MonthlyReportDto;
 import hu.projects.expense_tracker.features.transactions.dtos.TransactionDto;
 import hu.projects.expense_tracker.features.transactions.entities.Transaction;
 import hu.projects.expense_tracker.features.transactions.enums.TransactionCategory;
 import hu.projects.expense_tracker.features.transactions.repositories.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -47,16 +47,16 @@ public class ReportServiceImpl implements ReportService {
     }
 
     @Override
-    public Page<TransactionDto> getTransactionsInCategory(String username, String category, PaginationAttributes pagination) {
-        var transactionCategory = Arrays.stream(TransactionCategory.values())
-                .filter(c -> c.getName().equals(category))
-                .findFirst();
+    public PagedResult<TransactionDto> getTransactionsInCategory(String username, String category, Pageable pageable) {
+        var transactionCategory = TransactionCategory.getCategoryBySlugOrThrow(category);
 
-        if (transactionCategory.isEmpty()) throw new BadRequestException("Category not found.");
+        PageableValidator.throwIfSortInvalid(pageable, List.of("id", "createdAt", "amount"));
 
-        return transactionRepository
-                .findInCategoryByUsername(username, transactionCategory.get(), PageRequest.of(pagination.page(), pagination.size()))
+        var page = transactionRepository
+                .findInCategoryByUsername(username, transactionCategory, pageable)
                 .map(Transaction::toDto);
+
+        return PagedResult.create(page);
     }
 
     record DateRange(LocalDateTime start, LocalDateTime end) {}

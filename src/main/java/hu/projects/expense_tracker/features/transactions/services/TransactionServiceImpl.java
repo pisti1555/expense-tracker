@@ -1,8 +1,8 @@
 package hu.projects.expense_tracker.features.transactions.services;
 
-import hu.projects.expense_tracker.services.app_services.Slug;
+import hu.projects.expense_tracker.common.pagination.PagedResult;
+import hu.projects.expense_tracker.common.validations.app_validator_services.PageableValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -13,8 +13,8 @@ import hu.projects.expense_tracker.features.transactions.entities.Transaction;
 import hu.projects.expense_tracker.features.transactions.enums.TransactionCategory;
 import hu.projects.expense_tracker.features.transactions.repositories.TransactionRepository;
 import hu.projects.expense_tracker.features.users.repositories.UserRepository;
-import hu.projects.expense_tracker.common.pagination.PaginationAttributes;
-import java.util.Arrays;
+
+import java.util.List;
 
 @Service
 public class TransactionServiceImpl implements TransactionService {
@@ -30,8 +30,8 @@ public class TransactionServiceImpl implements TransactionService {
     @Override
     public TransactionDto createTransaction(CreateTransactionDto dto, String username) {
         var user = userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User not found."));
-        var categorySlug = Slug.of(dto.category());
-        var category = getCategoryOrThrowNotFound(categorySlug, dto.isExpense());
+        var categorySlug = dto.categorySlug();
+        var category = TransactionCategory.getCategoryBySlugOrThrow(categorySlug);
 
         var transaction = new Transaction(user, category, dto.amount());
         var savedTransaction = transactionRepository.save(transaction);
@@ -51,22 +51,15 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public Page<TransactionDto> getTransactionsPaged(String username, PaginationAttributes attributes) {
-        var pageable = Pageable.ofSize(attributes.size()).withPage(attributes.page());
+    public PagedResult<TransactionDto> getTransactionsPaged(String username, Pageable pageable) {
+        PageableValidator.throwIfSortInvalid(pageable, List.of("id", "createdAt", "amount"));
         var transactions = transactionRepository.findPagedByUsername(username, pageable);
-        return transactions.map(Transaction::toDto);
+        return PagedResult.create(transactions.map(Transaction::toDto));
     }
 
     private Transaction getTransactionOrThrowNotFound(Long id, String username) {
         var transaction = transactionRepository.findById(id).orElseThrow(() -> new NotFoundException("Transaction not found."));
         if (!transaction.getUser().getUsername().equals(username)) throw new NotFoundException("Transaction not found.");
         return transaction;
-    }
-
-    private TransactionCategory getCategoryOrThrowNotFound(String categorySlug, boolean isExpense) {
-        return Arrays.stream(TransactionCategory.values())
-                .filter(c -> c.getName().equals(categorySlug) && c.isExpense() == isExpense)
-                .findFirst()
-                .orElseThrow(() -> new NotFoundException("Category not found."));
     }
 }
