@@ -1,6 +1,9 @@
 package hu.projects.expense_tracker.features.transactions.controllers;
 
 import hu.projects.expense_tracker.common.pagination.PagedResult;
+import hu.projects.expense_tracker.features.transactions.dtos.CreateTransactionDto;
+import hu.projects.expense_tracker.features.transactions.dtos.TransactionDto;
+import hu.projects.expense_tracker.features.transactions.services.TransactionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -11,9 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
-import hu.projects.expense_tracker.features.transactions.dtos.CreateTransactionDto;
-import hu.projects.expense_tracker.features.transactions.dtos.TransactionDto;
-import hu.projects.expense_tracker.features.transactions.services.TransactionService;
 
 @RestController
 @RequestMapping(value = "/api/transactions")

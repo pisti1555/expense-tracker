@@ -1,8 +1,8 @@
 package hu.projects.expense_tracker.services.error_response_provider;
 
 import hu.projects.expense_tracker.common.exceptions.ApiException;
-import hu.projects.expense_tracker.common.models.error_responses.ErrorResponse;
 import hu.projects.expense_tracker.common.models.error_responses.DevelopmentErrorResponse;
+import hu.projects.expense_tracker.common.models.error_responses.ErrorResponse;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 

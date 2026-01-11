@@ -1,9 +1,8 @@
 package hu.projects.expense_tracker.features.users.repositories;
 
+import hu.projects.expense_tracker.features.users.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import hu.projects.expense_tracker.features.users.entities.User;
 
 import java.util.Optional;
 

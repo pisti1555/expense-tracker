@@ -4,7 +4,6 @@ import hu.projects.expense_tracker.common.pagination.PagedResult;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Stream;
 

@@ -1,5 +1,8 @@
 package hu.projects.expense_tracker.features.transactions.entities;
 
+import hu.projects.expense_tracker.features.transactions.dtos.TransactionDto;
+import hu.projects.expense_tracker.features.transactions.enums.TransactionCategory;
+import hu.projects.expense_tracker.features.users.entities.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -7,9 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import hu.projects.expense_tracker.features.transactions.dtos.TransactionDto;
-import hu.projects.expense_tracker.features.transactions.enums.TransactionCategory;
-import hu.projects.expense_tracker.features.users.entities.User;
 import java.time.LocalDateTime;
 
 @Entity
