@@ -1,8 +1,8 @@
 package hu.projects.expense_tracker.features.transactions.services;
 
+import factories.TransactionFactory;
+import factories.UserFactory;
 import hu.projects.expense_tracker.common.exceptions.NotFoundException;
-import hu.projects.expense_tracker.factories.TransactionFactory;
-import hu.projects.expense_tracker.factories.UserFactory;
 import hu.projects.expense_tracker.features.transactions.dtos.CreateTransactionDto;
 import hu.projects.expense_tracker.features.transactions.entities.Transaction;
 import hu.projects.expense_tracker.features.transactions.repositories.TransactionRepository;
@@ -16,7 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)

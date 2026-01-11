@@ -1,18 +1,17 @@
 package hu.projects.expense_tracker.features.transactions.services;
 
+import hu.projects.expense_tracker.common.exceptions.NotFoundException;
 import hu.projects.expense_tracker.common.pagination.PagedResult;
 import hu.projects.expense_tracker.common.validations.app_validator_services.PageableValidator;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
-import hu.projects.expense_tracker.common.exceptions.NotFoundException;
 import hu.projects.expense_tracker.features.transactions.dtos.CreateTransactionDto;
 import hu.projects.expense_tracker.features.transactions.dtos.TransactionDto;
 import hu.projects.expense_tracker.features.transactions.entities.Transaction;
 import hu.projects.expense_tracker.features.transactions.enums.TransactionCategory;
 import hu.projects.expense_tracker.features.transactions.repositories.TransactionRepository;
 import hu.projects.expense_tracker.features.users.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 

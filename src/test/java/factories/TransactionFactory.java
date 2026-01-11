@@ -1,4 +1,4 @@
-package hu.projects.expense_tracker.factories;
+package factories;
 
 import hu.projects.expense_tracker.features.transactions.dtos.CreateTransactionDto;
 import hu.projects.expense_tracker.features.transactions.entities.Transaction;
@@ -6,7 +6,10 @@ import hu.projects.expense_tracker.features.transactions.enums.TransactionCatego
 import hu.projects.expense_tracker.features.users.entities.User;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Random;
 
 public class TransactionFactory extends TestDataFactory {
     private static final Random random = new Random();

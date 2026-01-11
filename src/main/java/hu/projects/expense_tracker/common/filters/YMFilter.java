@@ -1,7 +1,9 @@
 package hu.projects.expense_tracker.common.filters;
 
 import hu.projects.expense_tracker.common.validations.annotation_validators.year_past_or_present.YearPastOrPresent;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 
 public record YMFilter(
         @NotNull(message = "Year is required")

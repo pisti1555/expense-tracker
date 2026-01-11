@@ -1,13 +1,12 @@
 package hu.projects.expense_tracker.features.transactions.repositories;
 
+import hu.projects.expense_tracker.features.transactions.entities.Transaction;
 import hu.projects.expense_tracker.features.transactions.enums.TransactionCategory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import hu.projects.expense_tracker.features.transactions.entities.Transaction;
 
 import java.time.LocalDateTime;
 import java.util.List;
