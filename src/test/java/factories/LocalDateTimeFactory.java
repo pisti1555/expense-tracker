@@ -1,4 +1,4 @@
-package hu.projects.expense_tracker.factories;
+package factories;
 
 import java.time.LocalDateTime;
 import java.time.YearMonth;

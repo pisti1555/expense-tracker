@@ -1,4 +1,4 @@
-package hu.projects.expense_tracker.factories;
+package factories;
 
 import hu.projects.expense_tracker.features.users.entities.User;
 import net.datafaker.Faker;

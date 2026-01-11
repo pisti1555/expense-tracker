@@ -1,10 +1,10 @@
 package hu.projects.expense_tracker.features.reports.services;
 
+import factories.LocalDateTimeFactory;
+import factories.TransactionFactory;
+import factories.UserFactory;
 import hu.projects.expense_tracker.common.exceptions.BadRequestException;
 import hu.projects.expense_tracker.common.exceptions.NotFoundException;
-import hu.projects.expense_tracker.factories.LocalDateTimeFactory;
-import hu.projects.expense_tracker.factories.TransactionFactory;
-import hu.projects.expense_tracker.factories.UserFactory;
 import hu.projects.expense_tracker.features.transactions.entities.Transaction;
 import hu.projects.expense_tracker.features.transactions.enums.TransactionCategory;
 import hu.projects.expense_tracker.features.transactions.repositories.TransactionRepository;

@@ -1,4 +1,4 @@
-package hu.projects.expense_tracker.factories;
+package factories;
 
 import hu.projects.expense_tracker.features.transactions.dtos.CreateTransactionDto;
 import hu.projects.expense_tracker.features.transactions.entities.Transaction;
